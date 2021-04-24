@@ -51,8 +51,8 @@ export default function Puzzle() {
     let newWordList = [...wordList];
     let newGuessList = [...guessList];
     if (
-      !guessList.some((guess) => guess === index) &&
-      !wordList[index].solved
+      !newGuessList.some((guess) => guess === index) &&
+      !newWordList[index].solved
     ) {
       newGuessList.push(index);
       newWordList[index].selected = true;
@@ -63,18 +63,18 @@ export default function Puzzle() {
     setGuessList([...newGuessList]);
     if (newGuessList.length === 4) {
       let groupList = [];
-      guessList.map((guess) => {
+      newGuessList.map((guess) => {
         return groupList.push(wordList[guess].group);
       });
       if (groupList.every((val, i, arr) => val === arr[0])) {
         newGuessList.map((guess) => {
           return (newWordList[guess].solved = true);
         });
+        let solvedWords = newWordList.filter((word) => word.solved);
+        const unsolvedWords = newWordList.filter((word) => !word.solved);
+        solvedWords = _.orderBy(solvedWords, ["group"]);
+        newWordList = solvedWords.concat(unsolvedWords);
       }
-      let solvedWords = newWordList.filter((word) => word.solved);
-      const unsolvedWords = newWordList.filter((word) => !word.solved);
-      solvedWords = _.orderBy(solvedWords, ["group"]);
-      newWordList = solvedWords.concat(unsolvedWords);
       const count = newWordList.filter((word) => {
         return word.solved;
       });
